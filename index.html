@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Parent — Dev Tools for Parents Who Code in Stolen Minutes</title>
+<meta name="description" content="The portable devcontainer that eliminates setup time. Clone, open, code. Built for parents who ship in 15-minute windows.">
+<meta property="og:title" content="Prompt Parent — Dev Tools for Parents Who Code">
+<meta property="og:description" content="The portable devcontainer that eliminates setup time. Clone, open, code.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://promptparent.com">
+<link rel="canonical" href="https://promptparent.com">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #fafafa;
+    --fg: #111;
+    --muted: #666;
+    --accent: #FF4858;
+    --accent-light: #fff0f1;
+    --border: #e5e5e5;
+    --card-bg: #fff;
+    --code-bg: #f5f5f5;
+    --terminal-bg: #1e1e2e;
+    --terminal-fg: #cdd6f4;
+    --terminal-green: #a6e3a1;
+    --terminal-coral: #FF4858;
+    --terminal-blue: #89b4fa;
+    --terminal-yellow: #f9e2af;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a0a;
+      --fg: #e5e5e5;
+      --muted: #999;
+      --accent: #FF6B78;
+      --accent-light: #2e1b1e;
+      --border: #2a2a2a;
+      --card-bg: #141414;
+      --code-bg: #1a1a1a;
+    }
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 0.35rem 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero p {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 2rem;
+  }
+
+  /* Terminal */
+  .terminal {
+    background: var(--terminal-bg);
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: left;
+    margin: 2.5rem auto;
+    max-width: 560px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .terminal-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .terminal-dot:nth-child(1) { background: #ff5f57; }
+  .terminal-dot:nth-child(2) { background: #febc2e; }
+  .terminal-dot:nth-child(3) { background: #28c840; }
+
+  .terminal-body {
+    padding: 1.25rem 1.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--terminal-fg);
+  }
+
+  .terminal-body .prompt { color: var(--terminal-coral); }
+  .terminal-body .cmd { color: var(--terminal-fg); }
+  .terminal-body .comment { color: #6c7086; font-style: italic; }
+  .terminal-body .output { color: var(--terminal-green); }
+  .terminal-body .time { color: var(--terminal-yellow); }
+
+  /* Problem/Solution */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 3rem 0;
+  }
+
+  @media (max-width: 600px) {
+    .problem-grid { grid-template-columns: 1fr; }
+  }
+
+  .problem-card, .solution-card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+  }
+
+  .problem-card h3, .solution-card h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .problem-card h3 { color: #ef4444; }
+  .solution-card h3 { color: #16a34a; }
+
+  .problem-card li, .solution-card li {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    list-style: none;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .problem-card li::before {
+    content: '✗';
+    position: absolute;
+    left: 0;
+    color: #ef4444;
+    font-weight: 600;
+  }
+
+  .solution-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  /* Features */
+  .features {
+    margin: 4rem 0;
+  }
+
+  .features h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .feature-list {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .feature {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    align-items: start;
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+  }
+
+  .feature-icon {
+    font-size: 1.25rem;
+    text-align: center;
+    padding-top: 0.1rem;
+  }
+
+  .feature h4 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .feature p {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    margin: 4rem 0;
+    padding: 3rem 2rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--card-bg);
+  }
+
+  .cta h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta p {
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--border);
+    color: var(--fg);
+    background: var(--card-bg);
+    margin-left: 0.75rem;
+  }
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  @media (max-width: 500px) {
+    .cta .btn { display: block; width: 100%; margin: 0 0 0.75rem 0; text-align: center; justify-content: center; }
+    .cta .btn-secondary { margin-left: 0; }
+  }
+
+  /* Who */
+  .who {
+    margin: 4rem 0;
+    text-align: center;
+  }
+
+  .who h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .audience-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .audience-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--muted);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 3rem 0 2rem;
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <span class="hero-badge">Open Source Devcontainer</span>
+    <h1>Stop setting up.<br>Start shipping.</h1>
+    <p>A portable development environment for parents who code in 15-minute windows. Clone, open, build. Zero config. Full security.</p>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="terminal-dot"></span>
+      <span class="terminal-dot"></span>
+      <span class="terminal-dot"></span>
+    </div>
+    <div class="terminal-body">
+      <span class="comment"># naptime started. clock's ticking.</span><br>
+      <span class="prompt">~</span> <span class="cmd">git clone https://github.com/meimakes/parent-dev-devcontainer .devcontainer</span><br>
+      <span class="prompt">~</span> <span class="cmd">code . </span><span class="comment"># "Reopen in Container" → go</span><br>
+      <span class="output">✓ Container ready</span> <span class="time">(28s)</span><br>
+      <span class="output">✓ Claude Code, Copilot, git — all configured</span><br>
+      <span class="output">✓ Credentials isolated. SSH keys safe.</span><br><br>
+      <span class="comment"># ship something before they wake up</span>
+    </div>
+  </div>
+
+  <div class="problem-grid">
+    <div class="problem-card">
+      <h3>The problem</h3>
+      <ul>
+        <li>15 mins to code, 12 spent on setup</li>
+        <li>Different env on every machine</li>
+        <li>"Works on my machine" is your machine</li>
+        <li>AI tools with unchecked host access</li>
+        <li>Context switching kills momentum</li>
+      </ul>
+    </div>
+    <div class="solution-card">
+      <h3>The fix</h3>
+      <ul>
+        <li>Clone → Open → Code in 30 seconds</li>
+        <li>Same environment everywhere</li>
+        <li>Works on any machine with Docker</li>
+        <li>AI runs sandboxed in the container</li>
+        <li>Auto-save, smart git, persistent history</li>
+      </ul>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="features">
+    <h2>What's inside</h2>
+    <div class="feature-list">
+      <div class="feature">
+        <div class="feature-icon">🤖</div>
+        <div>
+          <h4>AI assistants, sandboxed</h4>
+          <p>Claude Code + GitHub Copilot pre-configured. They run inside the container — no access to your host credentials, SSH keys, or other projects.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💾</div>
+        <div>
+          <h4>1-second auto-save</h4>
+          <p>Kid screaming? Just walk away. Your work saves continuously. Persistent bash history survives container rebuilds.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div>
+          <h4>Zero-config git</h4>
+          <p>Stage and commit in one action. Auto dark/light theme. Smart file nesting hides noise. Every setting optimized for fast context switches.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛡️</div>
+        <div>
+          <h4>Security by default</h4>
+          <p>After MCP security incidents burned real developers, this container isolates AI tools from your host. Defense in depth, not hopes and prayers.</p>
+        </div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🎨</div>
+        <div>
+          <h4>Beautiful out of the box</h4>
+          <p>JetBrains Mono with ligatures. Material icons. Bracket colorization. Quiet Light by day, Monokai by night. Looks good so you feel good.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="who">
+    <h2>Built for</h2>
+    <div class="audience-tags">
+      <span class="audience-tag">parent devs</span>
+      <span class="audience-tag">naptime coders</span>
+      <span class="audience-tag">side project shippers</span>
+      <span class="audience-tag">security-conscious builders</span>
+      <span class="audience-tag">anyone tired of setup</span>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>Start shipping in stolen minutes</h2>
+    <p>MIT licensed. One repo. Works with any project.</p>
+    <a href="https://github.com/meimakes/parent-dev-devcontainer" class="btn btn-primary">
+      → View on GitHub
+    </a>
+    <a href="https://theundercurrent.dev" class="btn btn-secondary">
+      Read The Undercurrent
+    </a>
+  </div>
+
+  <footer>
+    <a href="https://meimakes.com">@meimakes</a>
+    <p>Also: <a href="https://theundercurrent.dev">The Undercurrent</a> · <a href="https://raisingpixels.dev">Raising Pixels</a></p>
+  </footer>
+
+</div>
+
+<!-- Privacy-friendly analytics by Plausible -->
+<script async src="https://plausible.io/js/pa-vkT-mE7KvnPcXlh6uLTk8.js"></script>
+<script>
+  window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+  plausible.init()
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Prompt Parent
+
+> A portable, secure devcontainer for parents who code in 15-minute windows.
+
+Built by [@meimakes](https://x.com/meimakes) — also writes [The Undercurrent](https://theundercurrent.dev), a newsletter on dev tools and workflows.
+
+## What This Is
+
+An open-source VSCode devcontainer (.devcontainer/) you drop into any project. Clone, open, code — zero config. Includes:
+- Claude Code + GitHub Copilot (sandboxed, no host access)
+- 1-second auto-save (walk away anytime)
+- Persistent bash history across rebuilds
+- Git pre-configured
+- Day/night theme switching
+- Smart file nesting and exclusions
+
+## Why
+
+Parents who code in stolen minutes can't spend 12 of those minutes on setup. This eliminates environment configuration entirely and isolates AI tools from host credentials.
+
+## Source
+
+- [GitHub: meimakes/parent-dev-devcontainer](https://github.com/meimakes/parent-dev-devcontainer)
+
+## Related
+
+- [The Undercurrent](https://theundercurrent.dev) — Newsletter on dev tools and workflows
+- [Raising Pixels](https://raisingpixels.dev) — Newsletter on raising tech-native kids
+- [meimakes.com](https://meimakes.com) — Author's hub
